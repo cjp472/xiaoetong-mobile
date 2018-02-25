@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="author" content="舒仔">
+  <meta name="description" content="小鹅通，为内容创业者提供技术支持，一分钟搭建自己的知识变现平台。服务自媒体、传统媒体、出版社、在线教育机构、线下培训机构以及知识盈余的个人。">
+  <meta name="keywords" content="小鹅通,自媒体,新媒体,媒体,微信,微信公众平台,公众号,订阅号,服务号,粉丝,社群,用户画像,大数据,小程序,内容付费,知识服务,内容变现,知识变现,社群经济,粉丝经济,网红经济,流量变现,小鹅,小鹅通工具,KOL,大V,知识电商">
+  <title>小鹅通-分销市场</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .scrollContainer {
+      width: 1290px;
+      height: 255px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .img-wrapper {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      display: flex;
+    }
+
+    .scroll-img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .buttons-list {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      z-index: 9;
+    }
+
+    .buttons-item {
+      position: relative;
+      display: inline-block;
+      list-style-type: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #8c8c8c;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .buttons-item_active {
+      background-color: #ff6d28;
+    }
+
+    /*扩大按钮可点击区域*/
+    /*也可以使用 border 来扩大，：border: 5px solid transparent
+    不过需要设置 buttons-item 的background-clip: padding-box
+    这样背景色不会扩展到 border，而透明的边框看不见，也达到了扩大点击区域的目的*/
+    .buttons-item:after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      bottom: -10px;
+      left: -10px;
+      right: -10px;
+    }
+
+    .scroll-prev,
+    .scroll-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9;
+      width: 70px;
+      height: 70px;
+      line-height: 70px;
+      text-align: center;
+      font-size: 50px;
+      border: none;
+      background-color: rgba(0,0,0,.6);
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      opacity: 0;
+      transition: .5s;
+    }
+
+    .scroll-prev:hover,
+    .scroll-next:hover {
+      background-color: rgba(0,0,0,1);
+    }
+
+    .scrollContainer:hover .scroll-prev,
+    .scrollContainer:hover .scroll-next {
+      opacity: 1;
+    }
+
+    .scroll-prev {
+      left: 20px;
+    }
+
+    .scroll-next {
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="scrollContainer" id="scrollContainer">
+    <div class="img-wrapper" id="img-wrapper">
+      <img class="scroll-img" src="6.png" alt="超级单身课">
+      <img class="scroll-img" src="1.png" alt="戴锦华大师电影课">
+      <img class="scroll-img" src="2.jpg" alt="许芩教你制作PPT">
+      <img class="scroll-img" src="3.jpg" alt="丁香妈妈-帮助孩子养成好习惯">
+      <img class="scroll-img" src="4.png" alt="包妈育儿课程">
+      <img class="scroll-img" src="5.jpg" alt="理性护肤课程">
+      <img class="scroll-img" src="6.png" alt="超级单身课">
+      <img class="scroll-img" src="1.png" alt="戴锦华大师电影课">
+    </div>
+    <ul class="buttons-list">
+      <li class="buttons-item buttons-item_active" data-index = '1'></li>
+      <li class="buttons-item" data-index = '2'></li>
+      <li class="buttons-item" data-index = '3'></li>
+      <li class="buttons-item" data-index = '4'></li>
+      <li class="buttons-item" data-index = '5'></li>
+      <li class="buttons-item" data-index = '6'></li>
+    </ul>
+    <button class="scroll-prev" id="scroll-prev">&lt;</button>
+    <button class="scroll-next" id="scroll-next">&gt;</button>
+  </div>
+  <script>
+
+    window.onload = function () {
+      var scrollContainer = document.getElementById('scrollContainer');
+      var imgWrapper = document.getElementById('img-wrapper');
+      var scrollButtons = document.getElementsByClassName('buttons-item');
+      var scrollPrev = document.getElementById('scroll-prev');
+      var scrollNext = document.getElementById('scroll-next');
+      var index = 1;
+      var len = 6;
+      var animated = false;
+      var interval = 4000;
+      var timer;
+
+      imgWrapper.style.left = '-100%';
+
+      function animate (offset) {
+          if (offset == 0) {
+              return;
+          }
+          animated = true;
+          var time = 500;
+          var inteval = 10;
+          var speed = offset/(time/inteval);
+          var left = parseInt(imgWrapper.style.left) + offset;
+
+          var go = function (){
+              if ( (speed > 0 && parseInt(imgWrapper.style.left) < left) || (speed < 0 && parseInt(imgWrapper.style.left) > left)) {
+                  imgWrapper.style.left = parseInt(imgWrapper.style.left) + speed + '%';
+                  setTimeout(go, inteval);
+              }
+              else {
+                  imgWrapper.style.left = left + '%';
+                  if(left > -100){
+                      imgWrapper.style.left = -100 * len + '%';
+                  }
+                  if(left < (-100 * len)) {
+                      imgWrapper.style.left = '-100%';
+                  }
+                  animated = false;
+              }
+          }
+          go();
+      }
+
+      function showButton() {
+          for (var i = 0; i < scrollButtons.length ; i++) {
+              if( scrollButtons[i].classList.contains('buttons-item_active')){
+                  scrollButtons[i].classList.remove('buttons-item_active');
+                  break;
+              }
+          }
+          scrollButtons[index - 1].classList.add('buttons-item_active');
+      }
+
+      function play() {
+          timer = setTimeout(function () {
+              scrollNext.onclick();
+              play();
+          }, interval);
+      }
+
+      function stop() {
+          clearTimeout(timer);
+      }
+
+      scrollNext.onclick = function () {
+          if (animated) {
+              return;
+          }
+          if (index === 6) {
+              index = 1;
+          }
+          else {
+              index += 1;
+          }
+          animate(-100);
+          showButton();
+      };
+
+      scrollPrev.onclick = function () {
+          if (animated) {
+              return;
+          }
+          if (index === 1) {
+              index = 6;
+          }
+          else {
+              index -= 1;
+          }
+          animate(100);
+          showButton();
+      };
+
+      for (var i = 0; i < scrollButtons.length; i++) {
+          scrollButtons[i].onclick = function () {
+              if (animated) {
+                  return;
+              }
+              if(this.classList.contains('buttons-item_active')) {
+                  return;
+              }
+              var myIndex = parseInt(this.dataset.index);
+              var offset = -100 * (myIndex - index);
+
+              animate(offset);
+              index = myIndex;
+              showButton();
+          }
+      }
+
+      scrollContainer.onmouseover = stop;
+      scrollContainer.onmouseout = play;
+
+      play();
+    }
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+@svg 1px-border {
+  height: 1px;
+  @rect {
+    fill: var(--color, black);
+    width: 100%;
+    height: 100%;
+    }
+  }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 内外边距通常让各个浏览器样式的表现位置不同，全部重设 */
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+hr,
+button,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+menu,
+nav,
+section {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: PingFangSC,"Microsoft Yahei",Helvetica,Tahoma,Arial,"Hiragino Sans GB","Hiragino Sans GB W3",STXihei,STHeiti,Heiti,SimSun,sans-serif;
+  font-size: 28px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  color: #353535;
+  text-shadow: 0 0 .5px rgba(128,128,128,.2);
+}
+
+a {
+  color: #2a75ed;
+  text-decoration: none;
+}
+
+.logo-link {
+  display: block;
+  font-size: 0;
+}
+
+.logo {
+  width: 200px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+main {
+  width: 90%;
+  margin: 20px auto;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  margin-top: 70px;
+}
+
+input {
+  flex: 1;
+}
+
+.login,
+.register,
+.forget {
+  position: relative;
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+.title {
+  text-align: center;
+}
+
+.login-input,
+.register-input {
+  padding: 20px 0;
+  border: none;
+  border-bottom: 1px solid transparent;
+  border-image: svg(1px-border param(--color #eee)) 2 2 stretch;
+  outline: none;
+  font-size: 30px;
+}
+
+.login-input:focus,
+.register-input:focus {
+  border-image: svg(1px-border param(--color #2a75ed)) 2 2 stretch;
+}
+
+.register-confirm {
+  margin: 60px 0 30px 0;
+}
+
+.checkDigit {
+  position: absolute;
+  right: 0;
+  width: 300px;
+}
+
+.identify-link,
+.identify-link-forget {
+  position: absolute;
+  right: 0;
+}
+
+.login-button,
+.register-button {
+  width: 100%;
+  padding: 30px 0;
+  text-align: center;
+  background-color: #2a75ed;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 40px;
+  margin: 30px 0;
+}
+
+.login-button:disabled,
+.register-button:disabled {
+  opacity: .3;
+}
+
+.account-desc {
+  text-align: center;
+}
+
+.transfromToForget,
+.transfromToRegister,
+.transfromToLogin {
+  color: #2a75ed;
+}
+
+.transfromToForget {
+  float: right;
+  margin-top: 20px;
+}
+
+.register-confirm {
+  display: none;
+}
+
+.register-confirm-label::before {
+  content: '\a0';
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  margin-right: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 2px 2px #d9d9d9 inset;
+  text-align: center;
+  margin-left: 20px;
+  transition: 0.5s;
+}
+
+.register-confirm:checked + .register-confirm-label::before {
+  content: '\2713';
+  background-color: #2a75ed;
+  color: #fff;
+}
+
+.hint {
+  color: #fb6161;
+  font-size: 24px;
+  position: absolute;
+}
+
+.icon-right {
+  width: 24px;
+  height: 24px;
+  float: right;
+  opacity: 0;
+  transition: .5s;
+}
